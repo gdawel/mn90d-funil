@@ -54,7 +54,53 @@
                     <p class="text-lg text-gray-600 mb-8">Um guia direto ao ponto, um mapa para desviar das armadilhas que paralisam 99% dos novos empreendedores e finalmente tirar sua ideia do papel.</p>
                     
                     <!-- Formulário de Captura -->
-                    <iframe width="540" height="380" src="https://aefbc5e9.sibforms.com/serve/MUIFAJ4iiO9Ce4Z188UVE-KWDJ0ZtYzamOMZg4U11AzthyHfPXRmcRZS20JDJpttdQ8-KlSR7ksEZf0YG5Y7BX8nEEmlUANRU7Too6n1rZMIY9wVoXiYAeMOUjUgemDM5USuCgr9R5c6BZWMRjSy_LRYK_j5c8IvqWCxPb1a2QrMGGwC20Wx6ExwFNBsvYQhDXFylHg9BGebkzo_" frameborder="0" scrolling="auto" allowfullscreen style="display: block;margin-left: auto;margin-right: auto;max-width: 100%;"></iframe>
+                    <!-- Formulário de Captura do Hotmart Send (Estilizado) -->
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-inner">
+                        <h3 class="font-bold text-lg mb-4 text-center">Receba seu guia gratuito agora!</h3>
+                        <form klicksend-form-id='woux4WO' autocomplete='off' method="post" action="//handler.send.hotmart.com/subscription/woux4WO" class="space-y-4">
+                            
+                            <input type="email" autocomplete="off" name="email" id="email" placeholder="Seu melhor e-mail" value="" required class="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">
+                            
+                            <div class='flex items-center'>
+                                <input type="checkbox" autocomplete="off" name="gdpr" id="gdpr" required class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="gdpr" class="ml-2 block text-sm text-gray-700">Concordo em receber os e-mails.</label>
+                            </div>
+                            
+                            <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                                <input type="text" autocomplete='new-password' name="b_woux4WO" tabindex="-1" value="">
+                            </div>
+                            
+                            <button klicksend-form-submit-id='woux4WO' class="w-full text-white font-bold px-8 py-3 rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 btn-gradient hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300">
+                                PEGAR MEU E-BOOK
+                            </button>
+
+                            <div klicksend-gdpr-text class="text-xs text-gray-500 text-left pt-2">
+                                <p>Esses dados serão utilizados para entrarmos em contato com você e disponibilizarmos mais conteúdos e ofertas. Caso você não queira mais receber os nossos emails, cada email que você receber incluirá, ao final, um link que poderá ser usado para remover o seu email da nossa lista de distribuição.</p>
+                            </div>
+                            
+                            <script>
+                                // Script corrigido para tratar URLs relativas de protocolo
+                                try {
+                                    var pageParams = new URLSearchParams(window.location.search);
+                                    var form = document.querySelector('form[klicksend-form-id="woux4WO"]');
+                                    var formActionString = form.getAttribute('action');
+                                    
+                                    // Garante que o URL seja absoluto antes de construir o objeto URL
+                                    if (formActionString.startsWith('//')) {
+                                        formActionString = window.location.protocol + formActionString;
+                                    }
+
+                                    var formActionUrl = new URL(formActionString);
+                                    var formActionSearchParams = formActionUrl.searchParams.size > 0 ? formActionUrl.searchParams.toString() + '&' : '';
+                                    var combinedParams = formActionSearchParams + pageParams.toString();
+                                    form.action = formActionUrl.origin + formActionUrl.pathname + '?' + combinedParams;
+                                } catch (e) {
+                                    console.error("Erro ao processar o formulário do Hotmart:", e);
+                                }
+                            </script>
+                        </form>
+                    </div>
+
                 </div>
                 
                 <!-- Coluna da Imagem do E-book -->
@@ -185,11 +231,13 @@
                 </a>
             </div>
             <div class="flex justify-center items-center space-x-4 mb-4">
-                <a href="mn90d_termos.html" class="hover:text-white transition-colors duration-300">Termos de Uso</a>
+                <a href="mn90d_termos.html" target="_blank" class="hover:text-white transition-colors duration-300">Termos de Uso</a>
                 <span>|</span>
-                <a href="mn90d_privacidade.html" class="hover:text-white transition-colors duration-300">Política de Privacidade</a>
+                <a href="mn90d_privacidade.html" target="_blank" class="hover:text-white transition-colors duration-300">Política de Privacidade</a>
+                <span>|</span>
+                <a href="https://wa.me/message/UGTOHGJ7KEXFN1" target="_blank" class="hover:text-white transition-colors duration-300">Contato</a>
             </div>
-            <p class="mb-4">&copy; 2025-2026 Meu Negócio em 90 Dias. Todos os direitos reservados. CNPJ 10.615.239/0001-20</p>
+            <p class="mb-4">&copy; 2025-2026 George Dawel & Meu Negócio em 90 Dias. Todos os direitos reservados. CNPJ 10.615.239/0001-20</p>
             <div class="text-xs text-gray-500 max-w-3xl mx-auto">
                 <p>Este site não faz parte do site do Facebook ou da Facebook Inc. Além disso, este site não é endossado pelo Facebook de forma alguma. FACEBOOK é uma marca comercial da FACEBOOK, Inc.</p>
                 <p class="mt-2">Os resultados mencionados ou demonstrados neste site e em seus materiais são resultados individuais e podem variar. Não garantimos que você obterá os mesmos resultados. Seu sucesso depende da sua dedicação, esforço e aplicação das estratégias ensinadas.</p>
