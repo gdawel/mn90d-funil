@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 
 Disallow: /eb7e_5606_p02_tks.html
-Disallow: /pagina-downsell.html
-Disallow: /pagina-upsell.html
+Disallow: /eb7e_5606_p03_dwn.html
+Disallow: /eb7e_5606_p04_tks.html
+Disallow: /eb7e_5606_p05_bab_tks.html
