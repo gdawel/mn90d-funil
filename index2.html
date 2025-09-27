@@ -74,6 +74,7 @@
         .bg-white {background-color: #fff;}
         .bg-gray-50 {background-color: #f9fafb;}
         .bg-gray-800 {background-color: #1f2937;}
+        .bg-blue-50 {background-color: #eff6ff;}
         .bg-blue-100 {background-color: #dbeafe;}
         .p-2 {padding: 0.5rem;}
         .p-8 {padding: 2rem;}
@@ -84,18 +85,22 @@
         .py-10 {padding-top: 2.5rem; padding-bottom: 2.5rem;}
         .py-3 {padding-top: 0.75rem; padding-bottom: 0.75rem;}
         .px-4 {padding-left: 1rem; padding-right: 1rem;}
+        .px-8 {padding-left: 2rem; padding-right: 2rem;}
         .px-10 {padding-left: 2.5rem; padding-right: 2.5rem;}
         .pt-2 {padding-top: 0.5rem;}
         .pb-4 {padding-bottom: 1rem;}
         .pt-10 {padding-top: 2.5rem;}
+        .mt-16 {margin-top: 4rem;}
         .text-center {text-align: center;}
         .text-left {text-align: left;}
         .font-bold {font-weight: 700;}
         .font-extrabold {font-weight: 800;}
         .font-semibold {font-weight: 600;}
+        .text-base {font-size: 1rem; line-height: 1.5rem;}
         .text-4xl {font-size: 2.25rem; line-height: 2.5rem;}
         .text-lg {font-size: 1.125rem; line-height: 1.75rem;}
         .text-xl {font-size: 1.25rem; line-height: 1.75rem;}
+        .text-2xl {font-size: 1.5rem; line-height: 2rem;}
         .text-sm {font-size: 0.875rem; line-height: 1.25rem;}
         .text-xs {font-size: 0.75rem; line-height: 1rem;}
         .leading-tight {line-height: 1.25;}
@@ -115,6 +120,7 @@
         .shadow-lg {box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);}
         .shadow-xl {box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);}
         .shadow-2xl {box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);}
+        .transition-all {transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms;}
         .transition-colors {transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms;}
         .transition-shadow {transition-property: box-shadow; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms;}
         .duration-300 {transition-duration: 300ms;}
@@ -129,6 +135,7 @@
         .list-inside {list-style-position: inside;}
         .border {border-width: 1px;}
         .border-gray-300 {border-color: #d1d5db;}
+        .border-blue-200 {border-color: #bfdbfe;}
         .w-full {width: 100%;}
         .focus\:outline-none:focus {outline: 2px solid transparent; outline-offset: 2px;}
         .focus\:ring-2:focus {--tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);}
@@ -144,7 +151,7 @@
             .md\:grid-cols-5 {grid-template-columns: repeat(5, minmax(0, 1fr));}
             .md\:py-24 {padding-top: 6rem; padding-bottom: 6rem;}
             .md\:py-32 {padding-top: 8rem; padding-bottom: 8rem;}
-            .md\:text-6xl {font-size: 3.75rem; line-height: 1;}
+            .md\:text-lg {font-size: 1.125rem; line-height: 1.75rem;}
             .md\:text-xl {font-size: 1.25rem; line-height: 1.75rem;}
             .md\:mx-0 {margin-left: 0; margin-right: 0;}
             .md\:text-left {text-align: left;}
@@ -152,11 +159,10 @@
             .md\:col-span-3 {grid-column: span 3 / span 3;}
             .md\:px-10 {padding-left: 2.5rem; padding-right: 2.5rem;}
             .md\:py-4 {padding-top: 1rem; padding-bottom: 1rem;}
-            .md\:text-lg {font-size: 1.125rem; line-height: 1.75rem;}
         }
         @media (min-width: 1024px) {
             .lg\:grid-cols-3 {grid-template-columns: repeat(3, minmax(0, 1fr));}
-            .lg\:grid-cols-4 {grid-template-columns: repeat(4, minmax(0, 1fr));}
+            .lg\:text-6xl {font-size: 3.75rem; line-height: 1;}
         }
 
         /* Estilos personalizados mantidos */
@@ -235,7 +241,7 @@
                 <h2 class="section-title reveal">A Jornada "Meu Negócio em 90 Dias"</h2>
                 <p class="section-subtitle reveal">Sem complicação, com direcionamento, planejamento e execução, acompanhamento e ambiente de crescimento.</p>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left max-w-5xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-5xl mx-auto">
                     <!-- Card 1 -->
                     <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 reveal">
                         <div class="text-brand-yellow mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
@@ -266,7 +272,7 @@
                 <div class="mt-16 bg-blue-50 p-8 rounded-xl border border-blue-200 reveal">
                      <p class="text-xl text-gray-800 font-semibold max-w-3xl mx-auto mb-6">Agende uma reunião individual e gratuita de diagnóstico estratégico da viabilidade do seu negócio próprio. As vagas são limitadas. Clique no botão abaixo para se cadastrar e agendar sua sessão personalizada de diagnóstico estratégico de negócios.</p>
                      <a href="#" class="btn-primary font-bold px-8 py-3 rounded-lg text-lg">
-                        Quero Agendar a Sessão Grátis de Diagnóstico Estratégico
+                        QUERO AGENDAR
                     </a>
                 </div>
             </div>
@@ -275,7 +281,7 @@
         <section class="bg-gray-50 py-16 md:py-24">
             <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
                 <div class="reveal">
-                    <img src="https://storage.googleapis.com/gemini-prod-us-east1-9d2110c7-054b/images/5d45e05a-5a98-4670-84a5-1d4ac4a6358c.jpg" alt="Capa do E-book Os 7 Erros Fatais" class="rounded-lg shadow-xl mx-auto md:mx-0 max-w-sm" onerror="this.onerror=null;this.src='https://placehold.co/400x560/CCCCCC/FFFFFF?text=E-book+7+Erros';">
+                    <img src="images/ebook-7-erros-capa.png" alt="Capa do E-book Os 7 Erros Fatais" class="rounded-lg shadow-xl mx-auto md:mx-0 max-w-sm" onerror="this.onerror=null;this.src='https://placehold.co/400x560/CCCCCC/FFFFFF?text=E-book+7+Erros';">
                 </div>
                 <div class="text-center md:text-left reveal">
                     <span class="text-brand-yellow font-semibold">SEU PRIMEIRO PASSO, SEM CUSTO</span>
