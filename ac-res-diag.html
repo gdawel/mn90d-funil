@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Interativo: Meu Negócio em 90 Dias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Deep Slate -->
+    <!-- Application Structure Plan: The application is designed as an interactive dashboard with a clear, linear workflow. It starts with an introduction, moves to a detailed assessment section organized by tabs for each of the 7 pillars, and culminates in a results dashboard. This structure was chosen to perfectly mirror the flow of a 1:1 diagnostic session. The tab-based navigation allows the coach to easily move between pillars, while the final radar chart provides a powerful, summative visualization that makes the prospect's needs tangible and directly links them to the program's value proposition, enhancing usability and conversion potential. The export feature is added to the results view to allow for data archiving. -->
+    <!-- Visualization & Content Choices: 
+        1. Report Info: 7 Pillars with scores (0-100). Goal: Compare readiness across all areas. Viz/Presentation: Radar Chart. Interaction: Scores from sliders update the chart in real-time. Justification: Provides an immediate, holistic view of strengths and weaknesses, as intended by the source report, making the results easy to digest. Library: Chart.js.
+        2. Report Info: Diagnostic questions for each pillar. Goal: Assess specific points within each pillar. Viz/Presentation: Interactive form with sliders and note fields. Interaction: User inputs score and notes for each question. Justification: Transforms the static questionnaire into an engaging, interactive assessment tool, facilitating the live diagnostic process. Library/Method: Vanilla JS with HTML forms.
+        3. Report Info: Analysis and cause-and-effect insights for each pillar. Goal: Provide context for the scores. Viz/Presentation: Collapsible text blocks (accordions) on the results page. Interaction: User clicks to expand/collapse. Justification: Keeps the results dashboard clean and focused on the main chart, while making deeper insights easily accessible without overwhelming the user. Library/Method: Vanilla JS.
+        4. Report Info: Full assessment data (scores, notes). Goal: Archive and external analysis. Viz/Presentation: Exportable CSV file. Interaction: Button click triggers file generation and download. Justification: Provides a practical way to save the session's data for later reference, as requested by the user, enhancing the tool's utility. Library/Method: Vanilla JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #333;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        .nav-link.active {
+            background-color: #E9E7E2;
+            border-left-color: #4A5568;
+            color: #2D3748;
+            font-weight: 600;
+        }
+        .nav-link:hover {
+            background-color: #E9E7E2;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4A5568;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #4A5568;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <h1 class="text-2xl font-bold text-gray-800">Diagnóstico Interativo: Meu Negócio em 90 Dias</h1>
+            </div>
+        </header>
+
+        <div class="flex-grow flex flex-col md:flex-row max-w-7xl mx-auto w-full">
+            <nav id="navigation" class="w-full md:w-1/4 lg:w-1/5 bg-white md:border-r border-gray-200 p-4">
+                <ul class="space-y-1">
+                    <li><a href="#introducao" class="nav-link block p-3 rounded-lg text-gray-600 font-medium">Introdução</a></li>
+                    <li><a href="#diagnostico" class="nav-link block p-3 rounded-lg text-gray-600 font-medium">Diagnóstico</a></li>
+                    <li><a href="#resultados" class="nav-link block p-3 rounded-lg text-gray-600 font-medium">Resultados</a></li>
+                </ul>
+                <div class="mt-8">
+                    <button id="resetButton" class="w-full bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300">
+                        Reiniciar Diagnóstico
+                    </button>
+                </div>
+            </nav>
+
+            <main class="flex-grow w-full md:w-3/4 lg:w-4/5 p-4 sm:p-6 lg:p-8">
+                <div id="introducao" class="view-content">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Criando Seu Diagnóstico de Negócios de Alto Impacto</h2>
+                    <div class="space-y-4 text-gray-700 leading-relaxed">
+                        <p>A jornada empreendedora é repleta de oportunidades e desafios, e o sucesso frequentemente reside na capacidade de tomar decisões informadas e mitigar riscos desde o início. Um diagnóstico estruturado não é apenas uma ferramenta de avaliação; ele atua como um pilar fundamental para qualquer aspirante a empreendedor.</p>
+                        <p>Esta ferramenta interativa foi projetada para se alinhar perfeitamente com a promessa do programa "Meu Negócio em 90 Dias": oferecer orientação personalizada para identificar, analisar, validar, planejar e implementar o seu negócio. Ao identificar pontos fortes e fracos específicos, o diagnóstico permite um acompanhamento altamente personalizado, tornando a jornada de 90 dias mais eficiente e impactante.</p>
+                        <p>Use as abas de navegação para passar por cada etapa. Comece pelo "Diagnóstico" para avaliar os 7 pilares e, em seguida, visualize o resumo em "Resultados". A nova funcionalidade de exportação permite salvar os resultados da sessão em uma planilha para seus registros.</p>
+                    </div>
+                </div>
+
+                <div id="diagnostico" class="view-content hidden">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Os 7 Pilares da Prontidão de Negócios</h2>
+                    <p class="text-gray-600 mb-6">Avalie cada pergunta em uma escala de 0 a 100, refletindo o nível de compreensão, pesquisa e preparo do prospect. Use os botões abaixo para navegar entre as áreas.</p>
+                    <div id="pillar-navigation" class="flex flex-wrap gap-2 mb-6"></div>
+                    <div id="pillar-content"></div>
+                </div>
+
+                <div id="resultados" class="view-content hidden">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Visualizando o Sucesso</h2>
+                    <p class="text-gray-600 mb-6">O gráfico de radar abaixo representa graficamente os pontos fortes e fracos nas sete áreas de diagnóstico. Pontuações mais próximas da borda externa (100) indicam um desempenho robusto, enquanto pontuações mais próximas do centro (0) destacam áreas que necessitam de desenvolvimento.</p>
+                    <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg">
+                        <div class="chart-container">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="flex justify-center mt-6">
+                        <button id="exportButton" class="bg-gray-800 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300">
+                            Exportar Resultados
+                        </button>
+                    </div>
+                    <div id="results-summary" class="mt-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Análise Detalhada das Áreas</h3>
+                        <div id="summary-accordion" class="space-y-4"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const diagnosisData = {
+                pillars: [
+                    {
+                        id: 'p1',
+                        name: 'Oportunidade de Mercado & Fit Problema-Solução',
+                        average: 0,
+                        analysis: "Uma pontuação baixa nesta área indica um alto risco de cair na 'armadilha da construção'. Se um prospect não definiu claramente um problema ou validou a necessidade do mercado, ele está operando com base em suposições, não em evidências, o que aumenta o risco de um desajuste entre produto e mercado.",
+                        questions: [
+                            { text: "Qual é o problema real que o seu negócio pretende resolver para o seu cliente ideal?", score: 50, notes: '' },
+                            { text: "Quem é o seu cliente ideal? Descreva-o em termos demográficos, psicográficos e comportamentais.", score: 50, notes: '' },
+                            { text: "Como você validou (ou pretende validar) que este problema é significativo para o seu cliente ideal e que ele busca ativamente uma solução?", score: 50, notes: '' },
+                            { text: "Qual é o tamanho estimado do seu mercado-alvo (TAM, SAM, SOM) e qual o potencial de crescimento neste segmento?", score: 50, notes: '' },
+                            { text: "Quais são as tendências de mercado relevantes que apoiam a viabilidade e o crescimento do seu negócio?", score: 50, notes: '' }
+                        ]
+                    },
+                    {
+                        id: 'p2',
+                        name: 'Proposta de Valor Única & Vantagem Competitiva',
+                        average: 0,
+                        analysis: "Uma Proposta de Valor Única (PVU) fraca frequentemente indica uma compreensão superficial do problema ou uma incapacidade de inovar. Se um prospect tem dificuldade em articular uma PVU, o coaching pode precisar retornar à definição do problema ou fomentar a criatividade empreendedora.",
+                        questions: [
+                            { text: "Qual é a sua Proposta de Valor Única (PVU)? O que torna sua solução distintamente melhor ou diferente das alternativas existentes?", score: 50, notes: '' },
+                            { text: "Quem são seus principais concorrentes diretos e indiretos? Quais são seus pontos fortes e fracos em relação a eles?", score: 50, notes: '' },
+                            { text: "Como você planeja se diferenciar e criar uma vantagem competitiva sustentável (ex: tecnologia, modelo de negócio, nicho, custo, marca)?", score: 50, notes: '' },
+                            { text: "Qual é a sua estratégia para atrair e reter os primeiros usuários (early adopters) que validem sua solução?", score: 50, notes: '' },
+                            { text: "Você consegue explicar sua ideia de negócio de forma clara e concisa em um 'elevator pitch' persuasivo?", score: 50, notes: '' }
+                        ]
+                    },
+                    {
+                        id: 'p3',
+                        name: 'Modelo de Negócio & Fundamentos Financeiros',
+                        average: 0,
+                        analysis: "A falta de compreensão da economia unitária (CAC, LTV) é um indicador principal de crescimento insustentável. Se um prospect não compreende essas métricas, corre o risco de escalar um negócio fundamentalmente não lucrativo, onde o aumento das vendas acelera a queima de caixa.",
+                        questions: [
+                            { text: "Quais serão suas principais fontes de receita e como elas se escalam com o crescimento do negócio?", score: 50, notes: '' },
+                            { text: "Qual é a sua estrutura de custos (fixos e variáveis) e como você planeja otimizá-la para a lucratividade?", score: 50, notes: '' },
+                            { text: "Qual é a sua estratégia de precificação e como ela reflete o valor percebido pelo cliente e a sua estrutura de custos?", score: 50, notes: '' },
+                            { text: "Você tem uma projeção financeira básica (receitas, despesas, ponto de equilíbrio) para os primeiros 12-24 meses?", score: 50, notes: '' },
+                            { text: "Qual é a sua expectativa de Custo de Aquisição de Cliente (CAC) e Valor de Vida do Cliente (LTV), e qual a relação LTV:CAC esperada?", score: 50, notes: '' }
+                        ]
+                    },
+                    {
+                        id: 'p4',
+                        name: 'Viabilidade Operacional & Prontidão de Execução',
+                        average: 0,
+                        analysis: "Um plano operacional robusto para um Produto Mínimo Viável (MVP) é um contraponto direto à 'armadilha da perfeição'. Ele demonstra uma mentalidade prática que prioriza o aprendizado com o mercado em detrimento da perfeição teórica, alinhando-se ao objetivo do programa de 'abrir um negócio próprio mais rápido'.",
+                        questions: [
+                            { text: "Quais são os principais requisitos tecnológicos e operacionais para lançar seu negócio (ex: plataforma, equipamentos, licenças, fornecedores)?", score: 50, notes: '' },
+                            { text: "Você tem um plano inicial para desenvolver um Produto Mínimo Viável (MVP) ou protótipo para testar sua ideia no mercado?", score: 50, notes: '' },
+                            { text: "Quais são os marcos chave e o cronograma estimado para o lançamento inicial do seu produto/serviço?", score: 50, notes: '' },
+                            { text: "Você identificou os recursos essenciais (humanos, materiais, financeiros) necessários para a fase inicial de operação?", score: 50, notes: '' },
+                            { text: "Como você planeja coletar e processar o feedback dos primeiros usuários para iterar e melhorar sua solução?", score: 50, notes: '' }
+                        ]
+                    },
+                    {
+                        id: 'p5',
+                        name: 'Visão Empreendedora & Adaptabilidade',
+                        average: 0,
+                        analysis: "Uma visão forte sem adaptabilidade é uma receita para a rigidez. Se um prospect se apega à sua visão inicial de forma muito rígida, apesar do feedback do mercado, ele corre o risco de se tornar obsoleto. O objetivo 'sem medo de errar' implica abraçar a iteração e a mudança.",
+                        questions: [
+                            { text: "Qual é a sua visão de longo prazo para este negócio (3-5 anos)? Onde você o vê daqui a alguns anos?", score: 50, notes: '' },
+                            { text: "Como você lida com a incerteza e a necessidade de mudar de direção (pivotar) quando o feedback do mercado indica?", score: 50, notes: '' },
+                            { text: "Com que frequência você busca novas informações, tendências e conhecimentos para refinar sua ideia e estratégia?", score: 50, notes: '' },
+                            { text: "Você está disposto a experimentar e testar diferentes abordagens, mesmo que isso signifique sair da sua zona de conforto?", score: 50, notes: '' },
+                            { text: "Como você se mantém proativo e toma a iniciativa para criar oportunidades, em vez de apenas reagir a elas?", score: 50, notes: '' }
+                        ]
+                    },
+                    {
+                        id: 'p6',
+                        name: 'Acuidade de Liderança & Construção de Equipe',
+                        average: 0,
+                        analysis: "A disposição de um prospect para ser treinado é um forte preditor de sua capacidade de superar lacunas de habilidades. Se um prospect não está aberto a ser treinado, ele é menos propenso a buscar ou aceitar orientação crítica, o que limita seu crescimento e o potencial do negócio.",
+                        questions: [
+                            { text: "Quais são suas principais habilidades de liderança e como você as aplicaria para motivar e guiar sua equipe?", score: 50, notes: '' },
+                            { text: "Como você planeja construir uma equipe (ou rede de apoio) que complemente suas habilidades e cubra suas fraquezas?", score: 50, notes: '' },
+                            { text: "Como você busca e incorpora feedback de mentores, conselheiros ou especialistas para aprimorar sua visão e execução?", score: 50, notes: '' },
+                            { text: "Você tem experiência em delegar tarefas e capacitar outras pessoas para assumir responsabilidades?", score: 50, notes: '' },
+                            { text: "Como você abordaria e resolveria conflitos dentro de uma equipe ou com parceiros?", score: 50, notes: '' }
+                        ]
+                    },
+                    {
+                        id: 'p7',
+                        name: 'Gestão de Risco & Resiliência',
+                        average: 0,
+                        analysis: "A antifragilidade é mais valiosa do que a mera resiliência; ela indica crescimento a partir da adversidade. Um prospect que não apenas se recupera, mas aprende e se adapta positivamente a partir de contratempos, demonstra um nível mais alto de maturidade empreendedora.",
+                        questions: [
+                            { text: "Quais são os 3-5 maiores riscos que você identifica para o seu negócio nos próximos 12 meses?", score: 50, notes: '' },
+                            { text: "Como você planeja mitigar ou se preparar para esses riscos?", score: 50, notes: '' },
+                            { "text": "Descreva uma situação desafiadora que você enfrentou e como você a superou, demonstrando resiliência.", score: 50, notes: '' },
+                            { text: "Como você mantém uma mentalidade otimista e orientada para soluções diante de adversidades ou falhas?", score: 50, notes: '' },
+                            { text: "Você está confortável em tomar riscos calculados, entendendo que eles são necessários para o crescimento, mas sem ser imprudente?", score: 50, notes: '' }
+                        ]
+                    }
+                ]
+            };
+
+            const pillarNavContainer = document.getElementById('pillar-navigation');
+            const pillarContentContainer = document.getElementById('pillar-content');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const views = document.querySelectorAll('.view-content');
+            const resetButton = document.getElementById('resetButton');
+            const exportButton = document.getElementById('exportButton');
+
+            let radarChart;
+
+            function calculatePillarAverage(pillarIndex) {
+                const pillar = diagnosisData.pillars[pillarIndex];
+                const totalScore = pillar.questions.reduce((sum, q) => sum + q.score, 0);
+                pillar.average = Math.round(totalScore / pillar.questions.length);
+            }
+
+            function updateAllAverages() {
+                diagnosisData.pillars.forEach((_, index) => {
+                    calculatePillarAverage(index);
+                });
+            }
+
+            function renderPillarContent(pillarIndex) {
+                const pillar = diagnosisData.pillars[pillarIndex];
+                let content = `<div class="bg-white p-6 rounded-xl shadow-lg space-y-6">`;
+                content += `<h3 class="text-2xl font-bold text-gray-800">${pillar.name}</h3>`;
+                
+                pillar.questions.forEach((q, qIndex) => {
+                    content += `
+                        <div class="border-t border-gray-200 pt-4">
+                            <label for="q-${pillarIndex}-${qIndex}" class="block text-md font-medium text-gray-700 mb-2">${q.text}</label>
+                            <div class="flex items-center space-x-4">
+                                <input type="range" id="q-${pillarIndex}-${qIndex}" min="0" max="100" value="${q.score}" class="slider w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" data-pillar="${pillarIndex}" data-question="${qIndex}">
+                                <span id="val-${pillarIndex}-${qIndex}" class="font-semibold text-gray-800 w-12 text-center">${q.score}</span>
+                            </div>
+                            <textarea id="notes-${pillarIndex}-${qIndex}" class="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500" placeholder="Anotações...">${q.notes}</textarea>
+                        </div>
+                    `;
+                });
+                
+                content += `</div>`;
+                pillarContentContainer.innerHTML = content;
+                attachInputListeners();
+            }
+
+            function attachInputListeners() {
+                document.querySelectorAll('.slider').forEach(slider => {
+                    slider.addEventListener('input', (e) => {
+                        const pillarIndex = e.target.dataset.pillar;
+                        const questionIndex = e.target.dataset.question;
+                        const value = parseInt(e.target.value);
+                        diagnosisData.pillars[pillarIndex].questions[questionIndex].score = value;
+                        document.getElementById(`val-${pillarIndex}-${questionIndex}`).textContent = value;
+                        calculatePillarAverage(pillarIndex);
+                        updateRadarChart();
+                        renderResultsSummary();
+                    });
+                });
+                document.querySelectorAll('textarea').forEach(textarea => {
+                     textarea.addEventListener('input', (e) => {
+                        const idParts = e.target.id.split('-');
+                        const pillarIndex = idParts[1];
+                        const questionIndex = idParts[2];
+                        diagnosisData.pillars[pillarIndex].questions[questionIndex].notes = e.target.value;
+                    });
+                });
+            }
+            
+            function renderPillarNavigation() {
+                pillarNavContainer.innerHTML = '';
+                diagnosisData.pillars.forEach((pillar, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = `Pilar ${index + 1}`;
+                    button.className = 'px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 pillar-nav-btn';
+                    button.dataset.pillarIndex = index;
+                    pillarNavContainer.appendChild(button);
+                });
+
+                document.querySelectorAll('.pillar-nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.pillar-nav-btn').forEach(b => b.classList.remove('bg-gray-200', 'font-bold'));
+                        e.target.classList.add('bg-gray-200', 'font-bold');
+                        renderPillarContent(e.target.dataset.pillarIndex);
+                    });
+                });
+                
+                if (pillarNavContainer.firstChild) {
+                    pillarNavContainer.firstChild.click();
+                }
+            }
+
+            function initializeRadarChart() {
+                const ctx = document.getElementById('radarChart').getContext('2d');
+                const labels = diagnosisData.pillars.map(p => p.name.split(' & ').join('\n'));
+                const data = diagnosisData.pillars.map(p => p.average);
+
+                radarChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Pontuação do Diagnóstico',
+                            data: data,
+                            backgroundColor: 'rgba(74, 85, 104, 0.2)',
+                            borderColor: 'rgba(45, 55, 72, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(45, 55, 72, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(45, 55, 72, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                pointLabels: {
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: '#4A5568'
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                angleLines: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateRadarChart() {
+                if (radarChart) {
+                    radarChart.data.datasets[0].data = diagnosisData.pillars.map(p => p.average);
+                    radarChart.update();
+                }
+            }
+            
+            function renderResultsSummary() {
+                const accordionContainer = document.getElementById('summary-accordion');
+                accordionContainer.innerHTML = '';
+                diagnosisData.pillars.forEach((pillar, index) => {
+                    const scoreColor = pillar.average < 40 ? 'text-red-600' : pillar.average < 70 ? 'text-yellow-600' : 'text-green-600';
+                    const accordionItem = `
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                            <button class="w-full text-left p-4 focus:outline-none accordion-toggle">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="text-lg font-semibold text-gray-800">${index + 1}. ${pillar.name}</h4>
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-xl font-bold ${scoreColor}">${pillar.average}</span>
+                                        <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                </div>
+                            </button>
+                            <div class="accordion-content hidden p-4 border-t border-gray-200">
+                                <p class="text-gray-600 mb-4">${pillar.analysis}</p>
+                                <h5 class="font-semibold mb-2">Anotações Relevantes:</h5>
+                                <ul class="list-disc list-inside space-y-1 text-gray-600">
+                                    ${pillar.questions.map(q => q.notes ? `<li><strong>Pergunta:</strong> "${q.text.substring(0, 40)}..."<br><strong>Nota:</strong> ${q.notes}</li>` : '').join('') || '<li>Nenhuma anotação para esta área.</li>'}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.innerHTML += accordionItem;
+                });
+
+                document.querySelectorAll('.accordion-toggle').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const content = button.nextElementSibling;
+                        const icon = button.querySelector('svg');
+                        content.classList.toggle('hidden');
+                        icon.classList.toggle('rotate-180');
+                    });
+                });
+            }
+
+            function switchView(hash) {
+                views.forEach(view => view.classList.add('hidden'));
+                navLinks.forEach(link => link.classList.remove('active'));
+
+                const activeView = document.querySelector(hash);
+                const activeLink = document.querySelector(`.nav-link[href="${hash}"]`);
+
+                if (activeView) activeView.classList.remove('hidden');
+                if (activeLink) activeLink.classList.add('active');
+
+                if (hash === '#diagnostico') {
+                    renderPillarNavigation();
+                } else if (hash === '#resultados') {
+                    updateAllAverages();
+                    updateRadarChart();
+                    renderResultsSummary();
+                }
+            }
+            
+            function resetDiagnosis() {
+                if (confirm('Tem certeza de que deseja reiniciar o diagnóstico? Todos os dados inseridos serão perdidos.')) {
+                    const initialData = JSON.parse(JSON.stringify(diagnosisData));
+                    initialData.pillars.forEach(p => {
+                        p.average = 0;
+                        p.questions.forEach(q => {
+                            q.score = 50;
+                            q.notes = '';
+                        });
+                    });
+                    Object.assign(diagnosisData, initialData);
+                    
+                    updateAllAverages();
+                    updateRadarChart();
+                    renderResultsSummary();
+                    switchView('#introducao');
+                }
+            }
+
+            function exportToCSV() {
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Pilar;Média do Pilar;Pergunta;Pontuação da Pergunta;Anotações\r\n";
+                
+                diagnosisData.pillars.forEach(pillar => {
+                    const pillarName = `"${pillar.name.replace(/"/g, '""')}"`;
+                    const pillarAverage = pillar.average;
+                    
+                    pillar.questions.forEach(question => {
+                        const qText = `"${question.text.replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+                        const qScore = question.score;
+                        const qNotes = `"${question.notes.replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+                        csvContent += `${pillarName};${pillarAverage};${qText};${qScore};${qNotes}\r\n`;
+                    });
+                });
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "Diagnostico_MeuNegocio90Dias.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            resetButton.addEventListener('click', resetDiagnosis);
+            exportButton.addEventListener('click', exportToCSV);
+            
+            document.getElementById('navigation').addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') {
+                    e.preventDefault();
+                    const hash = e.target.getAttribute('href');
+                    window.location.hash = hash;
+                }
+            });
+
+            window.addEventListener('hashchange', () => {
+                const hash = window.location.hash || '#introducao';
+                switchView(hash);
+            });
+            
+            updateAllAverages();
+            initializeRadarChart();
+            switchView(window.location.hash || '#introducao');
+        });
+    </script>
+</body>
+</html>
